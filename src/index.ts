@@ -1,1 +1,2 @@
-const hello = () => 'Здарова бандит!';
+const hello = (): string => 'Здарова бандит!';
+hello();
