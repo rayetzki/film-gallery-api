@@ -9,11 +9,12 @@
     "build": "rimraf ./build && tsc",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",
+    "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "husky": {
     "hooks": {
-        "pre-commit": "yarn lint"
+      "pre-commit": "yarn lint && yarn format"
     }
   },
   "keywords": [
@@ -31,7 +32,8 @@
     "@typescript-eslint/eslint-plugin": "^4.3.0",
     "@typescript-eslint/parser": "^4.3.0",
     "eslint": "^7.10.0",
-    "eslint-plugin-shopify": "^35.1.0",
+    "eslint-config-prettier": "^6.12.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "husky": "^4.3.0",
     "nodemon": "^2.0.4",
     "rimraf": "^3.0.2",
