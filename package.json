@@ -1,0 +1,29 @@
+{
+  "name": "film-gallery",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run build && node build/index.js",
+    "start:dev": "nodemon",
+    "build": "rimraf ./build && tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "photo-gallery",
+    "nodejs",
+    "express"
+  ],
+  "repository": {
+    "url": "https://github.com/rayetzki/film-gallery.git"
+  },
+  "author": "Illia Raietskyi",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^14.11.2",
+    "nodemon": "^2.0.4",
+    "rimraf": "^3.0.2",
+    "ts-node-dev": "^1.0.0-pre.63",
+    "typescript": "^4.0.3"
+  }
+}
