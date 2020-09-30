@@ -1,43 +1,46 @@
 {
-  "name": "film-gallery",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "npm run build && node build/index.js",
-    "start:dev": "nodemon",
-    "build": "rimraf ./build && tsc",
-    "lint": "eslint . --ext .ts",
-    "lint:fix": "eslint . --ext .ts --fix",
-    "format": "prettier --config .prettierrc 'src/**/*.ts' --write",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint && yarn format"
+    "name": "film-gallery",
+    "version": "0.0.1",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "start": "npm run build && node build/index.js",
+        "start:dev": "nodemon",
+        "build": "rimraf ./build && tsc",
+        "lint": "eslint . --ext .ts",
+        "lint:fix": "eslint . --ext .ts --fix",
+        "format": "prettier --config .prettierrc --write \"*.{json,js,ts,md,yaml,yml}\"",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "husky": {
+        "hooks": {
+            "pre-commit": "yarn lint && yarn format"
+        }
+    },
+    "keywords": [
+        "photo-gallery",
+        "nodejs",
+        "express"
+    ],
+    "repository": {
+        "url": "https://github.com/rayetzki/film-gallery.git"
+    },
+    "author": "Illia Raietskyi",
+    "license": "ISC",
+    "devDependencies": {
+        "@types/node": "^14.11.2",
+        "@typescript-eslint/eslint-plugin": "^4.3.0",
+        "@typescript-eslint/parser": "^4.3.0",
+        "eslint": "^7.10.0",
+        "eslint-config-prettier": "^6.12.0",
+        "eslint-plugin-prettier": "^3.1.4",
+        "husky": "^4.3.0",
+        "nodemon": "^2.0.4",
+        "rimraf": "^3.0.2",
+        "ts-node-dev": "^1.0.0-pre.63",
+        "typescript": "^4.0.3"
+    },
+    "dependencies": {
+        "prettier": "^2.1.2"
     }
-  },
-  "keywords": [
-    "photo-gallery",
-    "nodejs",
-    "express"
-  ],
-  "repository": {
-    "url": "https://github.com/rayetzki/film-gallery.git"
-  },
-  "author": "Illia Raietskyi",
-  "license": "ISC",
-  "devDependencies": {
-    "@types/node": "^14.11.2",
-    "@typescript-eslint/eslint-plugin": "^4.3.0",
-    "@typescript-eslint/parser": "^4.3.0",
-    "eslint": "^7.10.0",
-    "eslint-config-prettier": "^6.12.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "husky": "^4.3.0",
-    "nodemon": "^2.0.4",
-    "rimraf": "^3.0.2",
-    "ts-node-dev": "^1.0.0-pre.63",
-    "typescript": "^4.0.3"
-  }
 }
