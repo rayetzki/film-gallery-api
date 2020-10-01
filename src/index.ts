@@ -36,5 +36,11 @@ app.post('/upload-image', async (request: Request, response: Response) => {
 
 app.listen(PORT, async () => {
     await MongoDB.init();
-    app.set('mongo', MongoDB.getDb());
+    app.set('mongo', MongoDB);
 });
+
+process.on('unhandledRejection', () => {
+    MongoDB.close();
+});
+
+export default app;

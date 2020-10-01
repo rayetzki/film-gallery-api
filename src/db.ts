@@ -1,28 +1,24 @@
 import { MongoClient, Db, MongoError } from 'mongodb';
 
-type ClientDb = Db | Record<string, unknown>;
-
 class MongoDB {
-    static URL: string = process.env.MONGODB_URL || 'mongodb://localhost:27017';
-    static DBNAME: string = process.env.MONGODB_DBNAME || '35mm';
+    static DBNAME: string = process.env.MONGODB_DBNAME || '';
+    static MONGO_URL: string = process.env.MONGODB_URL || '';
 
     client: MongoClient;
-    db: ClientDb;
 
     constructor() {
-        this.client = new MongoClient(MongoDB.URL, {
+        this.client = new MongoClient(MongoDB.MONGO_URL, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
-
-        this.db = {};
     }
 
     public async init(): Promise<void | MongoError> {
-        this.client.connect((error: MongoError, client: MongoClient) => {
-            if (error) throw error;
-            this.client = client;
-        });
+        try {
+            await this.client.connect();
+        } catch (error) {
+            return error;
+        }
     }
 
     public getDb(name = MongoDB.DBNAME): Db {
