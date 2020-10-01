@@ -5,6 +5,8 @@ import bodyParser from 'body-parser';
 import { v2 as cloudinary } from 'cloudinary';
 import MongoDB from './db';
 
+dotenv.config();
+
 const cloudinaryConfig = {
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
     api_key: process.env.CLOUDINARY_API_KEY,
@@ -33,7 +35,6 @@ app.post('/upload-image', async (request: Request, response: Response) => {
 });
 
 app.listen(PORT, async () => {
-    dotenv.config();
     await MongoDB.init();
-    console.log(MongoDB.getDb());
+    app.set('mongo', MongoDB.getDb());
 });
