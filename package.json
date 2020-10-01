@@ -9,7 +9,7 @@
         "build": "rimraf ./build && tsc",
         "lint": "eslint . --ext .ts",
         "lint:fix": "eslint . --ext .ts --fix",
-        "format": "prettier --config .prettierrc --write \"*.{js,ts,yaml,yml}\"",
+        "format": "prettier --write --ignore-unknown .",
         "test": "jest",
         "test:watch": "jest --watch"
     },
