@@ -10,12 +10,18 @@
         "lint": "eslint . --ext .ts",
         "lint:fix": "eslint . --ext .ts --fix",
         "format": "prettier --config .prettierrc --write \"*.{json,js,ts,md,yaml,yml}\"",
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "jest --watch"
     },
     "husky": {
         "hooks": {
             "pre-commit": "yarn lint && yarn format"
         }
+    },
+    "jest": {
+        "testEnvironment": "node",
+        "coveragePathIgnorePatterns": [
+            "/node_modules/"
+        ]
     },
     "keywords": [
         "photo-gallery",
@@ -28,15 +34,20 @@
     "author": "Illia Raietskyi",
     "license": "ISC",
     "devDependencies": {
+        "@types/jest": "^26.0.14",
         "@types/node": "^14.11.2",
+        "@types/supertest": "^2.0.10",
         "@typescript-eslint/eslint-plugin": "^4.3.0",
         "@typescript-eslint/parser": "^4.3.0",
         "eslint": "^7.10.0",
         "eslint-config-prettier": "^6.12.0",
+        "eslint-plugin-jest": "^24.0.2",
         "eslint-plugin-prettier": "^3.1.4",
         "husky": "^4.3.0",
+        "jest": "^26.4.2",
         "nodemon": "^2.0.4",
         "rimraf": "^3.0.2",
+        "supertest": "^5.0.0",
         "ts-node-dev": "^1.0.0-pre.63",
         "typescript": "^4.0.3"
     },
