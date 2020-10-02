@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { Db } from 'mongodb';
 import bodyParser from 'body-parser';
 import MongoDB from './db';
+import { getImages } from './controllers/Images.controller';
 
 dotenv.config();
 
@@ -36,6 +37,8 @@ app.post('/upload-image', async (request: Request, response: Response) => {
         response.status(500).send({ message: 'Internal server error' });
     }
 });
+
+app.get('/images', getImages);
 
 app.listen(PORT, async () => {
     const dbName: string = process.env.MONGODB_DBNAME || '';
