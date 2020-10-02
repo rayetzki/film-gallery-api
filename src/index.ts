@@ -1,11 +1,15 @@
-import express, { Request, Response, Express } from 'express';
+import express, { Express } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import { Db } from 'mongodb';
 import bodyParser from 'body-parser';
 import MongoDB from './db';
-import { getImages } from './controllers/Images.controller';
+import {
+    addImage,
+    deleteImageById,
+    getImageById,
+    getImages
+} from './controllers/Images.controller';
 
 dotenv.config();
 
@@ -20,25 +24,15 @@ cloudinary.config(cloudinaryConfig);
 const app: Express = express();
 const PORT: string = process.env.PORT || '3000';
 
-app.use(morgan(':method :url :response-time'));
+app.use(morgan(':method :status :url :response-time'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.post('/upload-image', async (request: Request, response: Response) => {
-    try {
-        const db: Db = request.app.get('mongo');
-        const result = await cloudinary.uploader.upload(request.body.image);
-
-        if (result) {
-            response.status(200).send({ message: 'success', result });
-            db.collection('images').insertOne({ result });
-        }
-    } catch (error) {
-        response.status(500).send({ message: 'Internal server error' });
-    }
-});
-
+/* Image controller */
 app.get('/images', getImages);
+app.get('/image', getImageById);
+app.post('/image', addImage);
+app.delete('/image', deleteImageById);
 
 app.listen(PORT, async () => {
     const dbName: string = process.env.MONGODB_DBNAME || '';
