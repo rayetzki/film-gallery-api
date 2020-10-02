@@ -3,6 +3,9 @@
     "version": "0.0.1",
     "description": "Full-fledged film gallery app using Node.js with images hosting on Cloudinary",
     "main": "./build/index.js",
+    "engines": {
+        "node": "14.x"
+    },
     "scripts": {
         "start": "npm run build && node build/index.js",
         "start:dev": "nodemon",

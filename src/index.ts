@@ -23,7 +23,7 @@ const cloudinaryConfig = {
 cloudinary.config(cloudinaryConfig);
 
 const app: Express = express();
-const PORT: string = process.env.PORT || '3000';
+const PORT: number = Number(process.env.PORT) || 8080;
 
 app.use(cors());
 app.use(morgan(':method :status :url :response-time'));
