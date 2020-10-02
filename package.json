@@ -9,7 +9,7 @@
     "scripts": {
         "start": "npm run build && node build/index.js",
         "start:dev": "nodemon",
-        "build": "rimraf ./build && tsc",
+        "build": "tsc",
         "lint": "eslint . --ext .ts",
         "lint:fix": "eslint . --ext .ts --fix",
         "format": "prettier --write --ignore-unknown .",
@@ -54,7 +54,6 @@
         "jest": "^26.4.2",
         "morgan": "^1.10.0",
         "nodemon": "^2.0.4",
-        "rimraf": "^3.0.2",
         "supertest": "^5.0.0",
         "ts-node-dev": "^1.0.0-pre.63",
         "typescript": "^4.0.3"
