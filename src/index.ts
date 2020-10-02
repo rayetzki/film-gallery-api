@@ -31,10 +31,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 /* Image controller */
-app.get('/images', getImages);
-app.get('/image', getImageById);
-app.post('/image', addImage);
-app.delete('/image', deleteImageById);
+app.get('/api/images', getImages);
+app.get('/api/image', getImageById);
+app.post('/api/image', addImage);
+app.delete('/api/image', deleteImageById);
 
 app.listen(PORT, async () => {
     const dbName: string = process.env.MONGODB_DBNAME || '';
