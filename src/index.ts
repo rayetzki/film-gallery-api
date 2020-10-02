@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, Express } from 'express';
 import { v2 as cloudinary } from 'cloudinary';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
@@ -15,8 +15,8 @@ const cloudinaryConfig = {
 
 cloudinary.config(cloudinaryConfig);
 
-const app = express();
-const PORT: string = process.env.SERVER_PORT || '3000';
+const app: Express = express();
+const PORT: string = process.env.PORT || '3000';
 
 app.use(morgan(':method :url :response-time'));
 app.use(bodyParser.json());
@@ -39,8 +39,9 @@ app.post(
 );
 
 app.listen(PORT, async () => {
-    app.set('mongo', await MongoDB.connect());
-    console.log(app.get('mongo'));
-});
+    const dbName = process.env.MONGODB_DBNAME || '';
+    const dbUrl = process.env.MONGODB_URL || '';
+    const db: MongoDB = new MongoDB(dbName, dbUrl);
 
-export default app;
+    app.set('mongo', await db.connect());
+});
