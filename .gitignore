@@ -5,3 +5,4 @@ dist/
 build/
 .env
 yarn-error.log
+public/
