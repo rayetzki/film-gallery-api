@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import { Db, ObjectId } from 'mongodb';
 import { Image } from '../models/Image.model';
-import { v2 as cloudinary } from 'cloudinary';
+import {
+    UploadApiErrorResponse,
+    UploadApiResponse,
+    v2 as cloudinary
+} from 'cloudinary';
 
 export const getImages = async (
     request: Request,
@@ -28,7 +32,9 @@ export const getImageById = async (
 
         const id: ObjectId = new ObjectId(String(request.query.id));
 
-        const image = await db.collection('images').findOne({ _id: id });
+        const image: Image | null = await db
+            .collection('images')
+            .findOne({ _id: id });
 
         if (image === null) {
             response.status(404).send({ message: "Image wasn't found" });
@@ -46,7 +52,11 @@ export const addImage = async (
 ): Promise<void> => {
     try {
         const db: Db = request.app.get('mongo');
-        const result = await cloudinary.uploader.upload(request.body.image);
+        const result:
+            | UploadApiResponse
+            | UploadApiErrorResponse = await cloudinary.uploader.upload(
+            request.body.image
+        );
 
         if (result) {
             response.status(200).send({ message: 'success', result });
@@ -64,7 +74,9 @@ export const deleteImageById = async (
     try {
         const db: Db = request.app.get('mongo');
         const id: ObjectId = new ObjectId(String(request.query.id));
-        const image = await db.collection('images').findOne({ _id: id });
+        const image: Image | null = await db
+            .collection('images')
+            .findOne({ _id: id });
 
         if (image === null) {
             response.status(404).send({ message: 'Image not found' });
@@ -74,7 +86,7 @@ export const deleteImageById = async (
                 .deleteOne({ _id: id });
 
             if (deleteImageResponse.result.ok === 1) {
-                const newImageList = await db
+                const newImageList: Array<Image> = await db
                     .collection('images')
                     .find()
                     .toArray();
