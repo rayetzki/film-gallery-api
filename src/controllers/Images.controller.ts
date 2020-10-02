@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Db, ObjectId } from 'mongodb';
-import { Image } from '../models/Image.model';
+import { DbImage, Image } from '../models/Image.model';
 import {
     UploadApiErrorResponse,
     UploadApiResponse,
@@ -12,7 +12,7 @@ export const getImages = async (
     response: Response
 ): Promise<void> => {
     try {
-        const db: Db = request.app.get('mongo');
+        const db: Db = request.app.get('db');
         const images: Array<Image> = await db
             .collection('images')
             .find()
@@ -28,7 +28,7 @@ export const getImageById = async (
     response: Response
 ): Promise<void> => {
     try {
-        const db: Db = request.app.get('mongo');
+        const db: Db = request.app.get('db');
 
         const id: ObjectId = new ObjectId(String(request.query.id));
 
@@ -51,19 +51,35 @@ export const addImage = async (
     response: Response
 ): Promise<void> => {
     try {
-        const db: Db = request.app.get('mongo');
-        const result:
-            | UploadApiResponse
-            | UploadApiErrorResponse = await cloudinary.uploader.upload(
-            request.body.image
-        );
+        const db: Db = request.app.get('db');
+        const image: Image = request.body;
 
-        if (result) {
-            response.status(200).send({ message: 'success', result });
-            db.collection('images').insertOne({ result });
+        if (image.base64Representation) {
+            const uploadResult:
+                | UploadApiResponse
+                | UploadApiErrorResponse = await cloudinary.uploader.upload(
+                image.base64Representation,
+                {
+                    use_filename: true,
+                    unique_filename: false,
+                    image_metadata: true
+                }
+            );
+
+            if (uploadResult) {
+                const imageData: DbImage = {
+                    name: uploadResult.original_filename,
+                    description: image.description || '',
+                    url: uploadResult.secure_url,
+                    createdAt: new Date(uploadResult.created_at)
+                };
+
+                db.collection('images').insertOne({ data: imageData });
+                response.status(200).send({ message: 'success', imageData });
+            }
         }
     } catch (error) {
-        response.status(500).send({ message: 'Internal server error' });
+        response.status(500).send({ message: 'Internal Server Error' });
     }
 };
 
@@ -72,7 +88,7 @@ export const deleteImageById = async (
     response: Response
 ): Promise<void> => {
     try {
-        const db: Db = request.app.get('mongo');
+        const db: Db = request.app.get('db');
         const id: ObjectId = new ObjectId(String(request.query.id));
         const image: Image | null = await db
             .collection('images')
@@ -98,6 +114,6 @@ export const deleteImageById = async (
         }
     } catch (error) {
         console.error(error);
-        response.status(500).send({ message: 'Internal server error' });
+        response.status(500).send({ message: 'Internal Server Error' });
     }
 };
