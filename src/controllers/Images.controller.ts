@@ -68,8 +68,8 @@ export const addImage = async (
 
             if (uploadResult) {
                 const imageData: DbImage = {
-                    name: uploadResult.original_filename,
-                    description: image.description || '',
+                    name: uploadResult.original_filename || 'Unnamed',
+                    description: image.description || 'No description',
                     url: uploadResult.secure_url,
                     createdAt: new Date(uploadResult.created_at)
                 };
@@ -117,3 +117,5 @@ export const deleteImageById = async (
         response.status(500).send({ message: 'Internal Server Error' });
     }
 };
+
+//TODO Add PUT request
