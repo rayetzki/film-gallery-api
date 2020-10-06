@@ -24,7 +24,7 @@ class MongoDB {
     }
 
     public clear(): void {
-        this.client?.close();
+        if (this.client) this.client.close();
     }
 }
 

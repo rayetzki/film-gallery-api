@@ -37,8 +37,8 @@ app.post('/api/image', addImage);
 app.delete('/api/image', deleteImageById);
 
 app.listen(PORT, async () => {
-    const dbName: string = process.env.MONGODB_DBNAME || '';
-    const dbUrl: string = process.env.MONGODB_URI || '';
+    const dbName = process.env.MONGODB_DBNAME;
+    const dbUrl = process.env.MONGODB_URI;
     const db: MongoDB = new MongoDB(dbName, dbUrl);
     app.set('db', await db.connect());
 });
