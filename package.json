@@ -7,10 +7,11 @@
         "node": "12.x"
     },
     "scripts": {
-        "start": "npm run build && node build/index.js",
-        "start:dev": "nodemon",
         "tsc": "tsc",
+        "start": "node build/index.js",
+        "start:dev": "nodemon",
         "build": "npm run tsc",
+        "postinstall": "npm run build",
         "lint": "eslint . --ext .ts",
         "lint:fix": "eslint . --ext .ts --fix",
         "format": "prettier --write --ignore-unknown .",
