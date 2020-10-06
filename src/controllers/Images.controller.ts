@@ -51,12 +51,16 @@ export const getImageById = async (request: Request, response: Response): Promis
     try {
         const db: Db = request.app.get('db');
         const imageId: string = request.query.id as string;
-        const id: ObjectId = new ObjectId(imageId);
-        const image: Image | null = await db.collection('images').findOne({ _id: id });
-        if (image === null) {
-            response.status(404).send({ message: "Image wasn't found" });
+        if (!imageId) {
+            response.status(400).send({ message: 'Please, provide image id' });
         } else {
-            response.status(200).send({ image });
+            const id: ObjectId = new ObjectId(imageId);
+            const image: Image | null = await db.collection('images').findOne({ _id: id });
+            if (image === null) {
+                response.status(404).send({ message: "Image wasn't found" });
+            } else {
+                response.status(200).send({ image });
+            }
         }
     } catch (error) {
         response.status(500).send({ message: error.message });
