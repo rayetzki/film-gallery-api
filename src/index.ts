@@ -40,5 +40,8 @@ app.listen(PORT, async () => {
     const dbName: string = process.env.MONGODB_DBNAME || '';
     const dbUrl: string = process.env.MONGODB_URI || '';
     const db: MongoDB = new MongoDB(dbName, dbUrl);
+    if (process.env.NODE_ENV === 'dev') {
+        await db.drop();
+    }
     app.set('db', await db.connect());
 });

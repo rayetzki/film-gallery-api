@@ -17,14 +17,18 @@ class MongoDB {
             useNewUrlParser: true,
             useUnifiedTopology: true
         });
-
         this.client = client;
-
         return client.db(this.DBNAME);
     }
 
     public clear(): void {
         if (this.client) this.client.close();
+    }
+
+    public async drop(): Promise<void> {
+        if (this.client) {
+            await this.client.db(this.DBNAME).dropDatabase();
+        }
     }
 }
 
