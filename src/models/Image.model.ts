@@ -1,4 +1,5 @@
 export interface Image {
+    name?: string;
     description?: string;
     base64Representation?: string;
 }

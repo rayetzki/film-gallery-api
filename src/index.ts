@@ -9,7 +9,8 @@ import {
     addImage,
     deleteImageById,
     getImageById,
-    getImages
+    getImages,
+    updateImage
 } from './controllers/Images.controller';
 
 dotenv.config();
@@ -35,13 +36,11 @@ app.get('/api/images', getImages);
 app.get('/api/image', getImageById);
 app.post('/api/image', addImage);
 app.delete('/api/image', deleteImageById);
+app.put('/api/image', updateImage);
 
 app.listen(PORT, async () => {
     const dbName: string = process.env.MONGODB_DBNAME || '';
     const dbUrl: string = process.env.MONGODB_URI || '';
     const db: MongoDB = new MongoDB(dbName, dbUrl);
-    if (process.env.NODE_ENV === 'dev') {
-        await db.drop();
-    }
     app.set('db', await db.connect());
 });
