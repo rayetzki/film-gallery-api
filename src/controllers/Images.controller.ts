@@ -15,7 +15,7 @@ export const getImages = async (request: Request, response: Response): Promise<v
         const imageDb: Collection<DbImage> = await db.collection('images');
 
         cloudinary.api.resources(async (error: string, images: ResourceApiResponse) => {
-            if (error) console.error(error);
+            if (error) response.status(500).send({ message: error });
 
             const collectionSize: number = await imageDb
                 .find()
@@ -102,7 +102,7 @@ export const addImage = async (request: Request, response: Response): Promise<vo
             }
         }
     } catch (error) {
-        response.status(500).send({ message: 'Internal Server Error' });
+        response.status(500).send({ message: error.message });
     }
 };
 
@@ -138,8 +138,7 @@ export const deleteImageById = async (request: Request, response: Response): Pro
             });
         }
     } catch (error) {
-        console.error(error);
-        response.status(500).send({ message: 'Internal Server Error' });
+        response.status(500).send({ message: error.message });
     }
 };
 
@@ -153,6 +152,7 @@ export const updateImage = async (request: Request, response: Response): Promise
             response.status(400).send({ message: 'Please, provide image id or image to update' });
         } else {
             const imageCollection: Collection<DbImage> = db.collection('images');
+
             try {
                 const result = await imageCollection.findOneAndUpdate(
                     { _id: imageId },
@@ -165,10 +165,10 @@ export const updateImage = async (request: Request, response: Response): Promise
                     response.status(400).send({ message: "Sorry, image wasn't found" });
                 }
             } catch (error) {
-                console.error(error);
+                response.status(500).send({ message: error.message });
             }
         }
     } catch (error) {
-        response.status(500).send({ message: 'Internal Server Error' });
+        response.status(500).send({ message: error.message });
     }
 };
