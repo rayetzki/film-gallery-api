@@ -12,7 +12,7 @@ import {
 export const getImages = async (request: Request, response: Response): Promise<void> => {
     try {
         const db: Db = request.app.get('db');
-        const imageDb: Collection = await db.collection('images');
+        const imageDb: Collection<DbImage> = await db.collection('images');
 
         cloudinary.api.resources(async (error: string, images: ResourceApiResponse) => {
             if (error) console.error(error);
@@ -50,12 +50,16 @@ export const getImages = async (request: Request, response: Response): Promise<v
 export const getImageById = async (request: Request, response: Response): Promise<void> => {
     try {
         const db: Db = request.app.get('db');
+        const imageCollection: Collection<DbImage> = db.collection('images');
         const imageId: string = request.query.id as string;
+
         if (!imageId) {
             response.status(400).send({ message: 'Please, provide image id' });
         } else {
-            const id: ObjectId = new ObjectId(imageId);
-            const image: Image | null = await db.collection('images').findOne({ _id: id });
+            const image: Image | null = await imageCollection.findOne({
+                _id: new ObjectId(imageId)
+            });
+
             if (image === null) {
                 response.status(404).send({ message: "Image wasn't found" });
             } else {
@@ -112,6 +116,8 @@ export const deleteImageById = async (request: Request, response: Response): Pro
         if (image === null) {
             response.status(404).send({ message: 'Image not found' });
         } else {
+            const imageCollection: Collection<DbImage> = db.collection('images');
+
             cloudinary.uploader.destroy(image.cloudinaryPublicId, async (error: string) => {
                 if (error) {
                     response.status(500).send({
@@ -119,13 +125,10 @@ export const deleteImageById = async (request: Request, response: Response): Pro
                     });
                 }
 
-                const deleteImageResponse = await db.collection('images').deleteOne({ _id: id });
+                const deleteImageResponse = await imageCollection.deleteOne({ _id: id });
 
                 if (deleteImageResponse.result.ok === 1) {
-                    const newImageList: Array<Image> = await db
-                        .collection('images')
-                        .find()
-                        .toArray();
+                    const newImageList: Array<Image> = await imageCollection.find().toArray();
 
                     response.status(200).send({
                         status: 'Image was deleted',
@@ -155,6 +158,7 @@ export const updateImage = async (request: Request, response: Response): Promise
                     { _id: imageId },
                     { $set: { ...image } }
                 );
+
                 if (result.ok === 1) {
                     response.status(200).send({ message: 'Updated image data', image });
                 } else {
