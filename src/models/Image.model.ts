@@ -6,7 +6,6 @@ export interface Image {
 
 export interface DbImage extends Image {
     cloudinaryPublicId: string;
-    name?: string;
     url: string;
     createdAt: Date | string;
 }
