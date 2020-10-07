@@ -14,34 +14,37 @@ export const getImages = async (request: Request, response: Response): Promise<v
         const db: Db = request.app.get('db');
         const imageDb: Collection<DbImage> = await db.collection('images');
 
-        cloudinary.api.resources(async (error: string, images: ResourceApiResponse) => {
-            if (error) response.status(500).send({ message: error });
+        cloudinary.api.resources(
+            { max_results: 500, prefix: 'test', type: 'upload' },
+            async (error: unknown, images: ResourceApiResponse) => {
+                if (error) response.status(500).send({ message: error });
 
-            const collectionSize: number = await imageDb
-                .find()
-                .toArray()
-                .then((items) => items.length);
+                const collectionSize: number = await imageDb
+                    .find()
+                    .toArray()
+                    .then((items) => items.length);
 
-            if (collectionSize === 0 && images.resources.length > 0) {
-                const imagesList: Array<DbImage> = images.resources.map(
-                    (image: ResourceApiResponse['resources'][0]) => ({
-                        cloudinaryPublicId: image.public_id,
-                        name: new URL(image.url).pathname.split('/').pop(),
-                        url: image.url,
-                        createdAt: new Date().toUTCString()
-                    })
-                );
+                if (collectionSize === 0 && images.resources.length > 0) {
+                    const imagesList: Array<DbImage> = images.resources.map(
+                        (image: ResourceApiResponse['resources'][0]) => ({
+                            cloudinaryPublicId: image.public_id,
+                            name: new URL(image.url).pathname.split('/').pop(),
+                            url: image.url,
+                            createdAt: new Date().toUTCString()
+                        })
+                    );
 
-                imageDb.insertMany(imagesList, (error: MongoError): void => {
-                    if (error) console.error(error);
-                });
+                    imageDb.insertMany(imagesList, (error: MongoError): void => {
+                        if (error) console.error(error);
+                    });
 
-                response.status(200).send(imagesList);
-            } else {
-                const dbImages: Array<Image> = await imageDb.find().toArray();
-                response.status(200).send(dbImages);
+                    response.status(200).send(imagesList);
+                } else {
+                    const dbImages: Array<Image> = await imageDb.find().toArray();
+                    response.status(200).send(dbImages);
+                }
             }
-        });
+        );
     } catch (error) {
         response.status(500).send({ message: error.message });
     }
@@ -83,12 +86,15 @@ export const addImage = async (request: Request, response: Response): Promise<vo
                 image.base64Representation,
                 {
                     use_filename: true,
+                    folder: 'test',
+                    type: 'upload',
                     unique_filename: false,
                     image_metadata: true
                 }
             );
 
             if (uploadResult) {
+                console.log(uploadResult);
                 const imageData: DbImage = {
                     cloudinaryPublicId: uploadResult.public_id,
                     name: uploadResult.original_filename || 'Unnamed',
@@ -102,6 +108,7 @@ export const addImage = async (request: Request, response: Response): Promise<vo
             }
         }
     } catch (error) {
+        console.error(error);
         response.status(500).send({ message: error.message });
     }
 };
@@ -120,6 +127,7 @@ export const deleteImageById = async (request: Request, response: Response): Pro
 
             cloudinary.uploader.destroy(image.cloudinaryPublicId, async (error: string) => {
                 if (error) {
+                    console.error(error);
                     response.status(500).send({ message: JSON.stringify(error) });
                 }
 

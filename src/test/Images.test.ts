@@ -4,6 +4,7 @@ const BASE_URL = 'http://localhost:8080/api';
 
 describe('Image service', () => {
     let listLength: number;
+
     describe('Getting an image list', () => {
         it('Gets an image list from the DB', async () => {
             const imageResponse: Response = await superagent.get(`${BASE_URL}/images/`);
@@ -21,7 +22,7 @@ describe('Image service', () => {
             const imageData = {
                 name: 'Ayvazovskiy',
                 description: 'Midnight Lake',
-                base64Representation: 'public/efddf7d670dd4f11e51f38ca08095980.jpg'
+                base64Representation: 'public/Ван Гог - Едоки картофеля.jpg'
             };
 
             const imageResponse: Response = await superagent
@@ -54,7 +55,7 @@ describe('Image service', () => {
 
         it('Deducts the image storage after deleting image', async () => {
             const imageResponse = await superagent.get(`${BASE_URL}/images`);
-            expect(imageResponse.body.length).toBeLessThan(listLength);
+            expect(imageResponse.body).toHaveLength(listLength === 0 ? listLength : listLength - 1);
         });
     });
 });
