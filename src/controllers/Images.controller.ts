@@ -36,7 +36,7 @@ export const getImages = async (request: Request, response: Response): Promise<v
                     if (error) console.error(error);
                 });
 
-                response.status(200).send(JSON.stringify(imagesList));
+                response.status(200).send(imagesList);
             } else {
                 const dbImages: Array<Image> = await imageDb.find().toArray();
                 response.status(200).send(dbImages);
@@ -97,8 +97,8 @@ export const addImage = async (request: Request, response: Response): Promise<vo
                     createdAt: new Date(uploadResult.created_at)
                 };
 
-                db.collection('images').insertOne({ data: imageData });
-                response.status(200).send({ message: 'success', imageData });
+                const insertionResponse = await db.collection('images').insertOne(imageData);
+                response.status(200).send({ ...imageData, id: insertionResponse.insertedId });
             }
         }
     } catch (error) {
@@ -120,24 +120,20 @@ export const deleteImageById = async (request: Request, response: Response): Pro
 
             cloudinary.uploader.destroy(image.cloudinaryPublicId, async (error: string) => {
                 if (error) {
-                    response.status(500).send({
-                        message: "Sorry, couldn't delete an image"
-                    });
+                    response.status(500).send({ message: JSON.stringify(error) });
                 }
 
                 const deleteImageResponse = await imageCollection.deleteOne({ _id: id });
 
                 if (deleteImageResponse.result.ok === 1) {
-                    const newImageList: Array<Image> = await imageCollection.find().toArray();
-
                     response.status(200).send({
-                        status: 'Image was deleted',
-                        images: newImageList
+                        numberOfDeletedElements: deleteImageResponse.result.n
                     });
                 }
             });
         }
     } catch (error) {
+        console.error(error);
         response.status(500).send({ message: error.message });
     }
 };

@@ -10,9 +10,9 @@ import {
 const Router = express.Router();
 
 Router.get('/', getImages);
-Router.get('/:id', getImageById);
+Router.get('/view', getImageById);
 Router.post('/', addImage);
-Router.put('/:id', updateImage);
-Router.delete('/:id', deleteImageById);
+Router.put('/', updateImage);
+Router.delete('/', deleteImageById);
 
 export default Router;

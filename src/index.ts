@@ -18,17 +18,21 @@ cloudinary.config({
 const app: Express = express();
 const PORT: number = (process.env.PORT || 8080) as number;
 
+app.disable('etag');
 app.use(cors());
 app.use(morgan(':method :status :url :response-time'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-/* Register routes */
 app.use('/api/images', ImagesRoutes);
 
 app.listen(PORT, async () => {
-    const dbName: string = process.env.MONGODB_DBNAME || '';
-    const dbUrl: string = process.env.MONGODB_URI || '';
+    const dbName: string = process.env.MONGODB_DBNAME as string;
+    const dbUrl: string = process.env.MONGODB_URI as string;
     const db: MongoDB = new MongoDB(dbName, dbUrl);
     app.set('db', await db.connect());
+    if (process.env.NODE_ENV === 'dev') {
+        await db.drop();
+    }
+    console.log(`Listening on PORT: ${PORT}`);
 });
