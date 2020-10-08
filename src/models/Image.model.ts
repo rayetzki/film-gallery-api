@@ -8,5 +8,4 @@ export interface Image {
 export interface DbImage extends Image {
     cloudinaryPublicId: string;
     url: string;
-    createdAt: Date | string;
 }
