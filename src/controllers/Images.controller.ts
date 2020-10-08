@@ -9,13 +9,33 @@ import {
     v2 as cloudinary
 } from 'cloudinary';
 
+export const getAllCollections = async (request: Request, response: Response): Promise<void> => {
+    try {
+        cloudinary.api.root_folders((error: unknown, callResult) => {
+            if (error) response.send(JSON.stringify(error));
+            if (callResult?.folders?.length > 0) {
+                const foldersList: Array<string> = callResult.folders.map(
+                    (folder: Record<string, string>) => folder.name
+                );
+
+                response.send(foldersList);
+            } else {
+                response.send([]);
+            }
+        });
+    } catch (error) {
+        response.sendStatus(500);
+    }
+};
+
 export const getImages = async (request: Request, response: Response): Promise<void> => {
     try {
         const db: Db = request.app.get('db');
         const imageDb: Collection<DbImage> = await db.collection('images');
+        const prefix = request.query.prefix;
 
         cloudinary.api.resources(
-            { max_results: 500, prefix: 'test', type: 'upload' },
+            { max_results: 500, prefix, type: 'upload' },
             async (error: unknown, images: ResourceApiResponse) => {
                 if (error) response.status(500).send({ message: error });
 
