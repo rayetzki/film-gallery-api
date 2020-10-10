@@ -4,8 +4,3 @@ export interface Image {
     description?: string;
     base64Representation?: string;
 }
-
-export interface DbImage extends Image {
-    cloudinaryPublicId: string;
-    url: string;
-}

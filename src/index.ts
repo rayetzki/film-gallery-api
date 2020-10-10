@@ -4,7 +4,6 @@ import morgan from 'morgan';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
-import MongoDB from './db';
 import ImagesRoutes from './routes/Images.routes';
 
 dotenv.config();
@@ -26,13 +25,4 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/api/images', ImagesRoutes);
 
-app.listen(PORT, async () => {
-    const dbName: string = process.env.MONGODB_DBNAME as string;
-    const dbUrl: string = process.env.MONGODB_URI as string;
-    const db: MongoDB = new MongoDB(dbName, dbUrl);
-    app.set('db', await db.connect());
-    if (process.env.NODE_ENV === 'dev') {
-        await db.drop();
-    }
-    console.log(`Listening on PORT: ${PORT}`);
-});
+app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
