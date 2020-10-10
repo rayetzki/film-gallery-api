@@ -20,7 +20,7 @@ const PORT: number = (process.env.PORT || 8080) as number;
 app.disable('etag');
 app.use(
     cors({
-        origin: ['localhost:8080', 'https://rayetzki-35.netlify.app']
+        origin: ['http://localhost:8080', 'https://rayetzki-35.netlify.app']
     })
 );
 app.use(morgan(':method :status :url :response-time'));
