@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import ImagesRoutes from './routes/Images.routes';
+
 dotenv.config();
 
 cloudinary.config({
@@ -22,7 +23,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(
     cors({
-        origin: ['https://film-ray.netlify.app', 'http://194.42.112.46:3000']
+        origin: ['https://film-ray.netlify.app', 'http://localhost:3000']
     })
 );
 app.use('/api/images', ImagesRoutes);
