@@ -5,8 +5,6 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import ImagesRoutes from './routes/Images.routes';
-import { allowedNodeEnvironmentFlags } from 'process';
-
 dotenv.config();
 
 cloudinary.config({
